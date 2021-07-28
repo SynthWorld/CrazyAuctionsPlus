@@ -26,7 +26,7 @@ Chinese:
     Item-Not-Found: '{prefix}&c你未拥有这个物品！'
     Repricing: "{prefix}&a你正在对 &r%item% &a进行重定价， 请在&e%timeout%秒&a内聊天栏中输入你想更改的&e价格&a， 回车发送即可更改。&7（无需加'/'）&a。"
     Repricing-Undo: "{prefix}&c已取消对物品 &r%item% &c的重定价。"
-    Repricing-Succeeded: '{prefix}&a你已将物品 &r%item% &a的价格/报酬重定价为 &e%money% ￥ &a.'
+    Repricing-Succeeded: '{prefix}&a你已将物品 &r%item% &a的价格/报酬重定价为 &e%money% ￥ &a， 税收 &e%tax% ￥&a。'
     Repricing-Failed: '{prefix}&c无法重定价， 无法在市场上找到这个物品！'
     Email-of-player-owned-items: '{prefix}&a你有新的物品邮件， 请及时使用命令 &e/Ca Mail &a取回！'
     Max-Selling-Items: '{prefix}&c你的出售物品数量已经达到了上限！&8（%number%件）'
@@ -363,7 +363,7 @@ English:
     Item-Not-Found: '{prefix}&cYou do not own this item!'
     Repricing: "{prefix}&aYou are repricing &r%item%&a, Please enter the price you want to change in the chat in &e%timeout% seconds&a, and press Enter to send the change. &7(No need to add '/') &a."
     Repricing-Undo: "{prefix}&cRepricing item &r%item% &chas been cancelled."
-    Repricing-Succeeded: '{prefix}&aYou have repriced the Price/Reward of item &r%item% &ato &e$%money% &a.'
+    Repricing-Succeeded: '{prefix}&aYou have repriced the Price/Reward of item &r%item% &ato &e$%money% &a. Tax &e$%tax% &a.'
     Repricing-Failed: '{prefix}&cUnable to reprice, This item cannot be found on the market!'
     Email-of-player-owned-items: '{prefix}&aYou have new item mail, please use the command &e/Ca Mail &ato get it back in time!'
     Max-Selling-Items: '{prefix}&cYou have reached the maximum number of items for sell!&8(%number% items)'
