@@ -13,6 +13,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+import studio.trc.bukkit.crazyactionsplus.util.metrics.Metrics;
 
 import studio.trc.bukkit.crazyauctionsplus.command.PluginCommand;
 import studio.trc.bukkit.crazyauctionsplus.currency.Vault;
@@ -43,6 +45,9 @@ public class Main
     
     public static Main main;
     public static Properties language = new Properties();
+    public static Metrics metrics;
+    
+    private static final String lang = Locale.getDefault().toString();
     
     public static Main getInstance() {
         return main;
@@ -52,7 +57,6 @@ public class Main
     public void onEnable() {
         long time = System.currentTimeMillis();
         main = this;
-        String lang = Locale.getDefault().toString();
         if (lang.equalsIgnoreCase("zh_cn")) {
             try {
                 language.load(getClass().getResourceAsStream("/Languages/Chinese.properties"));
@@ -90,11 +94,14 @@ public class Main
         getCommand("CA").setExecutor(pc);
         getCommand("CAP").setExecutor(pc);
         startCheck();
-        Vault.setupEconomy();
-        if (!PluginControl.useMySQLStorage() && !PluginControl.useSQLiteStorage()) {
-            PluginControl.updateCacheData();
-        }
+        metrics = new Metrics(this, 12254);
         if (language.get("PluginEnabledSuccessfully") != null) getServer().getConsoleSender().sendMessage(language.getProperty("PluginEnabledSuccessfully").replace("{time}", String.valueOf(System.currentTimeMillis() - time)).replace("{prefix}", PluginControl.getPrefix()).replace("&", "§"));
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                Vault.setupEconomy();
+            }
+        }.runTask(this);
     }
     
     @Override
@@ -146,51 +153,56 @@ public class Main
     private Thread DataUpdateThread;
     
     private void startCheck() {
-        DataUpdateThread = new Thread(() -> {
-            boolean fault = false;
-            while (asyncRun && PluginControl.isGlobalMarketAutomaticUpdate()) {
-                try {
-                    Thread.sleep((long) (PluginControl.getGlobalMarketAutomaticUpdateDelay() * 1000));
-                    PluginControl.updateCacheData();
-                    if (fault) {
-                        if (language.get("CacheUpdateReturnsToNormal") != null) getServer().getConsoleSender().sendMessage(language.getProperty("CacheUpdateReturnsToNormal").replace("{prefix}", PluginControl.getPrefix()).replace("&", "§"));
-                        fault = false;
-                    }
-                } catch (Exception ex) {
-                    if (language.get("CacheUpdateError") != null) getServer().getConsoleSender().sendMessage(language.getProperty("CacheUpdateError")
-                            .replace("{error}", ex.getLocalizedMessage() != null ? ex.getLocalizedMessage() : "null")
-                            .replace("{prefix}", PluginControl.getPrefix()).replace("&", "§"));
-                    fault = true;
-                    PluginControl.printStackTrace(ex);
-                }
-            }
-        });
-        DataUpdateThread.start();
-        RepricingTimeoutCheckThread = new Thread(() -> {
-            while (asyncRun) {
-                GUIAction.repricing.keySet().stream().filter((value) -> (System.currentTimeMillis() >= Long.valueOf(GUIAction.repricing.get(value)[1].toString()))).forEachOrdered((value) -> {
-                    try {
-                        MarketGoods mg  = (MarketGoods) GUIAction.repricing.get(value)[0];
-                        Player p = Bukkit.getPlayer(value);
-                        if (p != null) {
-                            Map<String, String> placeholders = new HashMap();
-                            try {
-                                placeholders.put("%item%", mg.getItem().getItemMeta().hasDisplayName() ? mg.getItem().getItemMeta().getDisplayName() : (String) mg.getItem().getClass().getMethod("getI18NDisplayName").invoke(mg.getItem()));
-                            } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-                                placeholders.put("%item%", mg.getItem().getItemMeta().hasDisplayName() ? mg.getItem().getItemMeta().getDisplayName() : mg.getItem().getType().toString().toLowerCase().replace("_", " "));
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                DataUpdateThread = new Thread(() -> {
+                    boolean fault = false;
+                    while (asyncRun && PluginControl.isGlobalMarketAutomaticUpdate()) {
+                        try {
+                            Thread.sleep((long) (PluginControl.getGlobalMarketAutomaticUpdateDelay() * 1000));
+                            PluginControl.updateCacheData();
+                            if (fault) {
+                                if (language.get("CacheUpdateReturnsToNormal") != null) getServer().getConsoleSender().sendMessage(language.getProperty("CacheUpdateReturnsToNormal").replace("{prefix}", PluginControl.getPrefix()).replace("&", "§"));
+                                fault = false;
                             }
-                            Messages.sendMessage(p, "Repricing-Undo", placeholders);
+                        } catch (Exception ex) {
+                            if (language.get("CacheUpdateError") != null) getServer().getConsoleSender().sendMessage(language.getProperty("CacheUpdateError")
+                                    .replace("{error}", ex.getLocalizedMessage() != null ? ex.getLocalizedMessage() : "null")
+                                    .replace("{prefix}", PluginControl.getPrefix()).replace("&", "§"));
+                            fault = true;
+                            PluginControl.printStackTrace(ex);
                         }
-                        GUIAction.repricing.remove(p.getUniqueId());
-                    } catch (ClassCastException ex) {}
+                    }
                 });
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                DataUpdateThread.start();
+                RepricingTimeoutCheckThread = new Thread(() -> {
+                    while (asyncRun) {
+                        GUIAction.repricing.keySet().stream().filter((value) -> (System.currentTimeMillis() >= Long.valueOf(GUIAction.repricing.get(value)[1].toString()))).forEachOrdered((value) -> {
+                            try {
+                                MarketGoods mg  = (MarketGoods) GUIAction.repricing.get(value)[0];
+                                Player p = Bukkit.getPlayer(value);
+                                if (p != null) {
+                                    Map<String, String> placeholders = new HashMap();
+                                    try {
+                                        placeholders.put("%item%", mg.getItem().getItemMeta().hasDisplayName() ? mg.getItem().getItemMeta().getDisplayName() : (String) mg.getItem().getClass().getMethod("getI18NDisplayName").invoke(mg.getItem()));
+                                    } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                                        placeholders.put("%item%", mg.getItem().getItemMeta().hasDisplayName() ? mg.getItem().getItemMeta().getDisplayName() : mg.getItem().getType().toString().toLowerCase().replace("_", " "));
+                                    }
+                                    Messages.sendMessage(p, "Repricing-Undo", placeholders);
+                                }
+                                GUIAction.repricing.remove(p.getUniqueId());
+                            } catch (ClassCastException ex) {}
+                        });
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                });
+                RepricingTimeoutCheckThread.start();
             }
-        });
-        RepricingTimeoutCheckThread.start();
+        }.runTask(this);
     }
 }

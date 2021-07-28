@@ -474,7 +474,7 @@ public class PluginCommand
                                         placeholders.put("%uid%", String.valueOf(uid));
                                         placeholders.put("%money%", String.valueOf(money));
                                         if (goods.getShopType().equals(ShopType.BUY)) {
-                                            goods.setReward(money);
+                                            goods.setPrice(money);
                                         } else {
                                             goods.setPrice(money);
                                         }
@@ -1350,7 +1350,7 @@ public class PluginCommand
                         double reward = Double.valueOf(args[1]);
                         double tax = 0;
                         if (!PluginControl.bypassTaxRate(player, ShopType.BUY)) {
-                            tax = PluginControl.getTaxRate(player, ShopType.BUY);
+                            tax = reward * PluginControl.getTaxRate(player, ShopType.BUY);
                         }
                         if (CurrencyManager.getMoney(player) < reward) { 
                             HashMap<String, String> placeholders = new HashMap();
@@ -1426,6 +1426,7 @@ public class PluginCommand
                             System.currentTimeMillis(),
                             reward
                         );
+                        CurrencyManager.removeMoney(player, reward + tax);
                         market.addGoods(goods);
                         Bukkit.getPluginManager().callEvent(new AuctionListEvent(player, ShopType.BUY, item, reward, tax));
                         Map<String, String> placeholders = new HashMap();
@@ -1437,7 +1438,6 @@ public class PluginCommand
                             placeholders.put("%item%", item.getItemMeta().hasDisplayName() ? item.getItemMeta().getDisplayName() : item.getType().toString().toLowerCase().replace("_", " "));
                         }
                         Messages.sendMessage(player, "Added-Item-For-Acquisition", placeholders);
-                        CurrencyManager.removeMoney(player, reward + tax);
                     }
                     return true;
                 }
