@@ -213,14 +213,6 @@ public class MarketGoods
     }
     
     /**
-     * @param reward 
-     */
-    public void setReward(double reward) {
-        this.reward = reward;
-        GlobalMarket.getMarket().saveData();
-    }
-    
-    /**
      * @param timeTillExpire
      */
     public void setTimeTillExpire(long timeTillExpire) {
