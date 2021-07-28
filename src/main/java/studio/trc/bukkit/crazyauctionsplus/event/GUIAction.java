@@ -843,11 +843,24 @@ public class GUIAction
                             e.setCancelled(true);
                             return;
                         }
+                        double tax = 0;
+                        if (!PluginControl.bypassTaxRate(player, ShopType.BUY)) {
+                            tax = money * PluginControl.getTaxRate(player, ShopType.BUY);
+                        }
+                        if (CurrencyManager.getMoney(player) < money + tax) { 
+                            HashMap<String, String> placeholders = new HashMap();
+                            placeholders.put("%Money_Needed%", String.valueOf((money + tax) - CurrencyManager.getMoney(player)));
+                            placeholders.put("%money_needed%", String.valueOf((money + tax) - CurrencyManager.getMoney(player)));
+                            Messages.sendMessage(player, "Need-More-Money", placeholders);
+                            e.setCancelled(true);
+                            return;
+                        }
+                        CurrencyManager.removeMoney(player, money + tax);
                         CurrencyManager.addMoney(player, mg.getReward());
-                        CurrencyManager.removeMoney(player, money);
-                        mg.setReward(money);
+                        mg.setPrice(money);
                         Map<String, String> placeholders = new HashMap();
                         placeholders.put("%money%", String.valueOf(money));
+                        placeholders.put("%tax%", String.valueOf(tax));
                         try {
                             placeholders.put("%item%", mg.getItem().getItemMeta().hasDisplayName() ? mg.getItem().getItemMeta().getDisplayName() : (String) mg.getItem().getClass().getMethod("getI18NDisplayName").invoke(mg.getItem()));
                         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
@@ -870,14 +883,28 @@ public class GUIAction
                         if (money > config.getLong("Settings.Max-Beginning-Sell-Price")) {
                             Map<String, String> placeholders = new HashMap();
                             placeholders.put("%price%", String.valueOf(config.getDouble("Settings.Max-Beginning-Sell-Price")));
-                           Messages.sendMessage(player, "Sell-Price-To-High", placeholders);
+                            Messages.sendMessage(player, "Sell-Price-To-High", placeholders);
                             repricing.remove(player.getUniqueId());
                             e.setCancelled(true);
                             return;
                         }
+                        double tax = 0;
+                        if (!PluginControl.bypassTaxRate(player, ShopType.SELL)) {
+                            tax = money * PluginControl.getTaxRate(player, ShopType.SELL);
+                        }
+                        if (CurrencyManager.getMoney(player) < tax) {
+                            HashMap<String, String> placeholders = new HashMap();
+                            placeholders.put("%Money_Needed%", String.valueOf(tax - CurrencyManager.getMoney(player)));
+                            placeholders.put("%money_needed%", String.valueOf(tax - CurrencyManager.getMoney(player)));
+                            Messages.sendMessage(player, "Need-More-Money", placeholders);
+                            e.setCancelled(true);
+                            return;
+                        }
+                        CurrencyManager.removeMoney(player, tax);
                         mg.setPrice(money);
                         Map<String, String> placeholders = new HashMap();
                         placeholders.put("%money%", String.valueOf(money));
+                        placeholders.put("%tax%", String.valueOf(tax));
                         try {
                             placeholders.put("%item%", mg.getItem().getItemMeta().hasDisplayName() ? mg.getItem().getItemMeta().getDisplayName() : (String) mg.getItem().getClass().getMethod("getI18NDisplayName").invoke(mg.getItem()));
                         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
