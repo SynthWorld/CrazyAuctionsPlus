@@ -14,8 +14,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import studio.trc.bukkit.crazyactionsplus.util.metrics.Metrics;
 
+import studio.trc.bukkit.crazyauctionsplus.metrics.Metrics;
 import studio.trc.bukkit.crazyauctionsplus.command.PluginCommand;
 import studio.trc.bukkit.crazyauctionsplus.currency.Vault;
 import studio.trc.bukkit.crazyauctionsplus.database.GlobalMarket;
@@ -36,6 +36,7 @@ import studio.trc.bukkit.crazyauctionsplus.util.CrazyAuctions;
 import studio.trc.bukkit.crazyauctionsplus.util.FileManager;
 import studio.trc.bukkit.crazyauctionsplus.util.PluginControl.ReloadType;
 import studio.trc.bukkit.crazyauctionsplus.util.PluginControl.RollBackMethod;
+import studio.trc.bukkit.crazyauctionsplus.util.Updater;
 
 public class Main
     extends JavaPlugin 
@@ -100,6 +101,9 @@ public class Main
             @Override
             public void run() {
                 Vault.setupEconomy();
+                if (PluginControl.enableUpdater()) {
+                    Updater.checkUpdate();
+                }
             }
         }.runTask(this);
     }

@@ -1,4 +1,4 @@
-package studio.trc.bukkit.crazyactionsplus.util.metrics;
+package studio.trc.bukkit.crazyauctionsplus.metrics;
 
 import java.util.function.BiConsumer;
 
