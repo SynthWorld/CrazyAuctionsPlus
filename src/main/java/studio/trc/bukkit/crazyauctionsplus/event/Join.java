@@ -51,7 +51,7 @@ public class Join
                  * WTF is Thread.sleep(2000) ?????
                  * Why did I do this?? I don't know.
                  * So I make a decision, I want to remake this plugin.
-                 * If you interesting, you can follow me at spigotmc or twitter https://twitter.com/TRCStudioDean
+                 * If you interesting, you can follow me at spigotmc or Github https://github.com/TRCStudioDean
                  */
                 Thread.sleep(2000);
             } catch (InterruptedException ex) {
