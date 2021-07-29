@@ -247,6 +247,10 @@ public class PluginControl
         }
     }
     
+    public static boolean enableUpdater() {
+        return Files.CONFIG.getFile().getBoolean("Settings.Updater");
+    }
+    
     public static Player getPlayer(String name) {
         try {
             return Bukkit.getServer().getPlayer(name);
@@ -317,6 +321,15 @@ public class PluginControl
         if (Files.CONFIG.getFile().getBoolean("Settings.Permissions.Commands." + perm + ".Default")) return true;
         if (!sender.hasPermission(Files.CONFIG.getFile().getString("Settings.Permissions.Commands." + perm + ".Permission"))) {
             if (message) Messages.sendMessage(sender, "No-Permission");
+            return false;
+        }
+        return true;
+    }
+    
+    public static boolean hasPermission(Player player, String path, boolean message) {
+        if (Files.CONFIG.getFile().getBoolean("Settings." + path + ".Default")) return true;
+        if (!player.hasPermission(Files.CONFIG.getFile().getString("Settings." + path + ".Permission"))) {
+            if (message) Messages.sendMessage(player, "No-Permission");
             return false;
         }
         return true;

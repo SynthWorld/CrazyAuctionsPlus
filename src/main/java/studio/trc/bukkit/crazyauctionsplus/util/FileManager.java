@@ -949,8 +949,10 @@ public class FileManager {
         }
         
         public boolean getBoolean(String path) {
+            if (file.equals(Files.DATABASE)) return config.getBoolean(path);
             if (config.get(path) == null) {
-                return false;
+                reset(path);
+                return config.getBoolean(path);
             } else {
                 return config.getBoolean(path);
             }
