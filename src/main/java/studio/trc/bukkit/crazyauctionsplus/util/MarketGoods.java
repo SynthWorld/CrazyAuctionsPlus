@@ -209,6 +209,7 @@ public class MarketGoods
      */
     public void setPrice(double price) {
         this.price = price;
+        this.reward = price;
         GlobalMarket.getMarket().saveData();
     }
     
