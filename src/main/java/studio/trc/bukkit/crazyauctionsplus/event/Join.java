@@ -1,18 +1,9 @@
 package studio.trc.bukkit.crazyauctionsplus.event;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
 
 import studio.trc.bukkit.crazyauctionsplus.util.enums.Messages;
 import studio.trc.bukkit.crazyauctionsplus.util.Category;
@@ -20,14 +11,15 @@ import studio.trc.bukkit.crazyauctionsplus.util.enums.ShopType;
 import studio.trc.bukkit.crazyauctionsplus.util.FileManager;
 import studio.trc.bukkit.crazyauctionsplus.util.FileManager.Files;
 import studio.trc.bukkit.crazyauctionsplus.util.PluginControl;
+import studio.trc.bukkit.crazyauctionsplus.util.Updater;
 import studio.trc.bukkit.crazyauctionsplus.database.Storage;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import studio.trc.bukkit.crazyauctionsplus.util.Updater;
 
 public class Join
     implements Listener

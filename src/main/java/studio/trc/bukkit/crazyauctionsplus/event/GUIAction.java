@@ -142,6 +142,11 @@ public class GUIAction
                                     long ID = biddingID.get(player.getUniqueId());
                                     double bid = bidding.get(player.getUniqueId());
                                     MarketGoods mg = market.getMarketGoods(ID);
+                                    if (mg == null) {
+                                        e.setCancelled(true);
+                                        player.closeInventory();
+                                        return;
+                                    }
                                     String topBidder = mg.getTopBidder();
                                     if (CurrencyManager.getMoney(player) < bid) {
                                         Map<String, String> placeholders = new HashMap();
@@ -638,6 +643,7 @@ public class GUIAction
                                         Storage playerdata = Storage.getPlayer(mg.getItemOwner().getUUID());
                                         playerdata.addItem(new ItemMail(playerdata.makeUID(), mg.getItemOwner().getUUID(), mg.getItem(), PluginControl.convertToMill(FileManager.Files.CONFIG.getFile().getString("Settings.Full-Expire-Time")), System.currentTimeMillis(), false));
                                         market.removeGoods(uid);
+                                        repricing.remove(player.getUniqueId());
                                         playClick(player);
                                         openPlayersCurrentList(player, 1);
                                         return;
@@ -670,6 +676,7 @@ public class GUIAction
                                         Bukkit.getPluginManager().callEvent(event);
                                         CurrencyManager.addMoney(player, mg.getReward());
                                         market.removeGoods(uid);
+                                        repricing.remove(player.getUniqueId());
                                         playClick(player);
                                         openPlayersCurrentList(player, 1);
                                         return;
@@ -701,6 +708,7 @@ public class GUIAction
                                         Storage playerdata = Storage.getPlayer(mg.getItemOwner().getUUID());
                                         playerdata.addItem(new ItemMail(playerdata.makeUID(), mg.getItemOwner().getUUID(), mg.getItem(), PluginControl.convertToMill(FileManager.Files.CONFIG.getFile().getString("Settings.Full-Expire-Time")), System.currentTimeMillis(), false));
                                         market.removeGoods(uid);
+                                        repricing.remove(player.getUniqueId());
                                         playClick(player);
                                         openPlayersCurrentList(player, 1);
                                         return;
