@@ -1906,15 +1906,15 @@ public class PluginCommand
                 return players;
             }
             if (args[0].equalsIgnoreCase("buy") && args.length == 4 && PluginControl.hasCommandPermission(sender, "Buy", false)) {
-                if (sender instanceof Player) {
-                    List<String> list = new ArrayList();
-                    for (Material m : Material.values()) {
-                        if (m.toString().toLowerCase().startsWith(args[3].toLowerCase())) {
-                            list.add(m.toString().toLowerCase());
+                    if (sender instanceof Player) {
+                        List<String> list = new ArrayList();
+                        for (Material m : Material.values()) {
+                            if (m.toString().toLowerCase().contains(args[3].toLowerCase())) {
+                                list.add(m.toString().toLowerCase());
+                            }
                         }
+                        return list;
                     }
-                    return list;
-                }
             }
             if (args[0].equalsIgnoreCase("gui") && PluginControl.hasCommandPermission(sender, "Gui", false)) { // gui buy 
                 if (args.length == 2) {
