@@ -78,16 +78,36 @@ public class PluginCommand
                 return true;
             }
             if (args.length == 0) {
-                if (!PluginControl.hasCommandPermission(sender, "Access", true)) return true;
-                Map<String, String> placeholders = new HashMap();
-                placeholders.put("%version%", Main.getInstance().getDescription().getVersion());
-                Messages.sendMessage(sender, "CrazyAuctions-Main", placeholders);
+                if (!(sender instanceof Player)) {
+                    Messages.sendMessage(sender, "Players-Only");
+                    return true;
+                }
+                if (!PluginControl.hasCommandPermission(sender, "Gui", true)) return true;
+                Player player = (Player) sender;
+                if (PluginControl.isWorldDisabled(player)) {
+                    Messages.sendMessage(sender, "World-Disabled");
+                    return true;
+                }
+                if (Files.CONFIG.getFile().getBoolean("Settings.Category-Page-Opens-First")) {
+                    GUIAction.setShopType(player, ShopType.ANY);
+                    GUIAction.setCategory(player, Category.getDefaultCategory());
+                    GUIAction.openCategories(player, ShopType.ANY);
+                } else {
+                    GUIAction.openShop(player, ShopType.ANY, Category.getDefaultCategory(), 1);
+                }
                 return true;
             }
             if (args.length >= 1) {
                 if (args[0].equalsIgnoreCase("Help")) {
                     if (!PluginControl.hasCommandPermission(sender, "Help", true)) return true;
                     Messages.sendMessage(sender, "Help-Menu");
+                    return true;
+                }
+                if (args[0].equalsIgnoreCase("Version")) {
+                    if (!PluginControl.hasCommandPermission(sender, "Access", true)) return true;
+                    Map<String, String> placeholders = new HashMap();
+                    placeholders.put("%version%", Main.getInstance().getDescription().getVersion());
+                    Messages.sendMessage(sender, "CrazyAuctions-Main", placeholders);
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("Reload")) {
