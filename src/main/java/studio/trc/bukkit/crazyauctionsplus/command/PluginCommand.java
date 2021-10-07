@@ -68,7 +68,7 @@ public class PluginCommand
     
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String lable, String[] args) {
-        if (lable.equalsIgnoreCase("CrazyAuctions") || lable.equalsIgnoreCase("CrazyAuction") || lable.equalsIgnoreCase("CA") || lable.equalsIgnoreCase("CAP") || lable.equalsIgnoreCase("CrazyAuctionsPlus")) {
+        if (lable.equalsIgnoreCase("CA") || lable.equalsIgnoreCase("AH")) {
             if (FileManager.isBackingUp()) {
                 Messages.sendMessage(sender, "Admin-Command.Backup.BackingUp");
                 return true;
