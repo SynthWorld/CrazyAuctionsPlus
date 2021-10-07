@@ -89,11 +89,8 @@ public class Main
         pm.registerEvents(new ShopSign(), this);
         pm.registerEvents(new AuctionEvents(), this);
         PluginCommand pc = new PluginCommand();
-        getCommand("CrazyAuctionsPlus").setExecutor(pc);
-        getCommand("CrazyAuctions").setExecutor(pc);
-        getCommand("CrazyAuction").setExecutor(pc);
         getCommand("CA").setExecutor(pc);
-        getCommand("CAP").setExecutor(pc);
+        getCommand("AH").setExecutor(pc);
         startCheck();
         metrics = new Metrics(this, 12254);
         if (language.get("PluginEnabledSuccessfully") != null) getServer().getConsoleSender().sendMessage(language.getProperty("PluginEnabledSuccessfully").replace("{time}", String.valueOf(System.currentTimeMillis() - time)).replace("{prefix}", PluginControl.getPrefix()).replace("&", "§"));
