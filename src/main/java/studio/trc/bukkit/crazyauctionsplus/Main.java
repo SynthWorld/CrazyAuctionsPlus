@@ -61,11 +61,11 @@ public class Main
         if (lang.equalsIgnoreCase("zh_cn")) {
             try {
                 language.load(getClass().getResourceAsStream("/Languages/Chinese.properties"));
-            } catch (IOException ex) {}
+            } catch (IOException ignored) {}
         } else {
             try {
                 language.load(getClass().getResourceAsStream("/Languages/English.properties"));
-            } catch (IOException ex) {}
+            } catch (IOException ignored) {}
         }
         if (language.get("LanguageLoaded") != null) getServer().getConsoleSender().sendMessage(language.getProperty("LanguageLoaded").replace("&", "§"));
         
@@ -89,8 +89,8 @@ public class Main
         pm.registerEvents(new ShopSign(), this);
         pm.registerEvents(new AuctionEvents(), this);
         PluginCommand pc = new PluginCommand();
-        getCommand("CA").setExecutor(pc);
-        getCommand("AH").setExecutor(pc);
+        getCommand("ca").setExecutor(pc);
+        getCommand("ah").setExecutor(pc);
         startCheck();
         metrics = new Metrics(this, 12254);
         if (language.get("PluginEnabledSuccessfully") != null) getServer().getConsoleSender().sendMessage(language.getProperty("PluginEnabledSuccessfully").replace("{time}", String.valueOf(System.currentTimeMillis() - time)).replace("{prefix}", PluginControl.getPrefix()).replace("&", "§"));

@@ -1,10 +1,11 @@
 name: CrazyAuctionsPlus
+api-version: 1.13
 authors:
 - BadBones69
 - TRCRedstoner
+- averyanalex
 main: studio.trc.bukkit.crazyauctionsplus.Main
-version: 1.1.9-sw
-api-version: 1.13
+version: 1.1.9-ht
 description: Plus version of CrazyAuctions plugin, by TRCRedstoner (TRC Studio & PA Project), The original author was BadBones69.
 commands:
   ca:
